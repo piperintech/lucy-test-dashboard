@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>QA Report — SNAP Insurance</title>
+<link href="https://fonts.googleapis.com/css2?family=Arsenal:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & BASE ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:'Inter',system-ui,sans-serif;background:#f7f7f5;color:#1a1a2e;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+/* ── TOKENS ── */
+:root{
+  --navy:#0f1c2e;--deep:#1a3a6b;--royal:#1a4fd6;--sky:#6b9ef5;
+  --white:#ffffff;--cream:#f7f7f5;--paper:#ffffff;
+  --ink1:#0f1c2e;--ink2:#2d3748;--ink3:#4a5568;--ink4:#718096;
+  --border:#e2e8f0;--border-strong:#cbd5e0;
+  --success:#276749;--success-bg:#f0fff4;--success-border:#9ae6b4;
+  --warning:#7b4f12;--warning-bg:#fffaf0;--warning-border:#f6ad55;
+  --danger:#9b2335;--danger-bg:#fff5f5;--danger-border:#feb2b2;
+  --info:#1a4fd6;--info-bg:#ebf4ff;--info-border:#90cdf4;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.05);
+  --shadow:0 4px 12px rgba(0,0,0,.08),0 2px 4px rgba(0,0,0,.05);
+  --shadow-lg:0 10px 30px rgba(0,0,0,.10),0 4px 8px rgba(0,0,0,.05);
+  --r:8px;--r-lg:12px;--r-pill:999px;
+  --serif:'Arsenal','Georgia',serif;
+  --sans:'Inter',system-ui,sans-serif;
+}
+
+/* ── PRINT ── */
+@media print{
+  body{background:#fff;font-size:11pt}
+  .no-print{display:none!important}
+  .page-break{page-break-before:always}
+  .card{box-shadow:none!important;border:1px solid var(--border)!important}
+  .cover{min-height:auto;padding:48pt}
+  .header-bar{position:relative}
+  a{color:inherit;text-decoration:none}
+}
+@page{margin:0.75in;size:letter}
+
+/* ── LAYOUT ── */
+.container{max-width:960px;margin:0 auto;padding:0 clamp(16px,4vw,40px) 80px}
+.section{margin-bottom:48px}
+.section-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink4);margin-bottom:8px}
+.section-title{font-family:var(--serif);font-style:italic;font-size:clamp(22px,3vw,30px);font-weight:400;color:var(--ink1);margin-bottom:4px;line-height:1.2}
+.section-sub{font-size:13px;color:var(--ink4);margin-bottom:24px}
+hr.divider{border:none;border-top:1px solid var(--border);margin:48px 0}
+
+/* ── PRINT BUTTON ── */
+.print-btn{position:fixed;bottom:28px;right:28px;background:var(--royal);color:#fff;border:none;border-radius:var(--r-pill);padding:12px 22px;font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:8px;z-index:100;transition:background .15s}
+.print-btn:hover{background:var(--deep)}
+.print-btn svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2}
+
+/* ── COVER ── */
+.cover{background:var(--navy);min-height:320px;padding:clamp(40px,6vw,72px) clamp(24px,6vw,72px);display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;margin-bottom:0}
+.cover::before{content:'';position:absolute;right:-80px;top:-80px;width:360px;height:360px;border-radius:50%;background:rgba(107,158,245,.06);pointer-events:none}
+.cover::after{content:'';position:absolute;right:60px;bottom:-60px;width:200px;height:200px;border-radius:50%;background:rgba(26,79,214,.08);pointer-events:none}
+.cover-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:48px}
+.cover-wordmark{font-family:var(--serif);font-weight:700;font-size:18px;color:#fff;letter-spacing:.02em}
+.cover-badge{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:var(--r-pill);padding:5px 14px}
+.cover-eyebrow{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--sky);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.cover-eyebrow::before{content:'';width:24px;height:1px;background:var(--sky)}
+.cover-title{font-family:var(--serif);font-style:italic;font-weight:400;font-size:clamp(32px,5vw,52px);color:#fff;line-height:1.05;letter-spacing:-.01em;margin-bottom:8px}
+.cover-title strong{font-weight:700}
+.cover-sub{font-size:15px;color:rgba(255,255,255,.55);max-width:520px;line-height:1.6;margin-bottom:40px}
+.cover-meta{display:flex;flex-wrap:wrap;gap:24px;border-top:1px solid rgba(255,255,255,.1);padding-top:24px}
+.cover-meta-item{font-size:12px;color:rgba(255,255,255,.45)}
+.cover-meta-item strong{display:block;color:rgba(255,255,255,.85);font-weight:600;font-size:13px;margin-bottom:2px}
+
+/* ── STAT GRID ── */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:0}
+.stat-card{background:var(--paper);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;box-shadow:var(--shadow-sm)}
+.stat-card.navy{background:var(--navy);border-color:transparent}
+.stat-card.danger{border-color:var(--danger-border);background:var(--danger-bg)}
+.stat-card.success{border-color:var(--success-border);background:var(--success-bg)}
+.stat-card.royal{border-color:var(--info-border);background:var(--info-bg)}
+.stat-label{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink4);margin-bottom:6px}
+.stat-card.navy .stat-label{color:rgba(255,255,255,.45)}
+.stat-card.danger .stat-label{color:var(--danger)}
+.stat-card.success .stat-label{color:var(--success)}
+.stat-card.royal .stat-label{color:var(--info)}
+.stat-value{font-family:var(--serif);font-size:36px;font-weight:700;line-height:1;color:var(--ink1)}
+.stat-card.navy .stat-value{color:#fff}
+.stat-card.danger .stat-value{color:var(--danger)}
+.stat-card.success .stat-value{color:var(--success)}
+.stat-card.royal .stat-value{color:var(--royal)}
+.stat-note{font-size:11px;color:var(--ink4);margin-top:6px}
+.stat-card.navy .stat-note{color:rgba(255,255,255,.35)}
+
+/* ── CARD ── */
+.card{background:var(--paper);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:16px}
+.card-head{background:var(--navy);padding:12px 20px;display:flex;align-items:center;gap:10px}
+.card-head h2{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.7)}
+.card-body{padding:20px}
+
+/* ── SUMMARY BOX ── */
+.summary-box{background:linear-gradient(135deg,var(--deep) 0%,var(--royal) 100%);border-radius:var(--r-lg);padding:28px 32px;color:#fff;margin-bottom:32px}
+.summary-box p{font-size:15px;line-height:1.75;color:rgba(255,255,255,.85)}
+
+/* ── BAR CHART ── */
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.chart-wrap{background:var(--paper);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;box-shadow:var(--shadow-sm)}
+.chart-title{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink4);margin-bottom:16px}
+.bar-chart{display:flex;flex-direction:column;gap:10px}
+.bar-row{display:flex;align-items:center;gap:10px}
+.bar-name{font-size:12px;font-weight:600;color:var(--ink2);width:90px;flex-shrink:0;text-align:right}
+.bar-track{flex:1;background:var(--border);border-radius:var(--r-pill);height:24px;overflow:hidden}
+.bar-fill{height:100%;border-radius:var(--r-pill);display:flex;align-items:center;padding-left:10px;font-size:11px;font-weight:700;color:#fff}
+.bar-val{font-size:12px;font-weight:700;color:var(--ink2);width:36px;flex-shrink:0}
+
+/* ── DONUT ── */
+.donut-row{display:flex;align-items:center;gap:20px}
+.donut-legend{display:flex;flex-direction:column;gap:8px}
+.legend-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--ink2)}
+.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* ── PATTERN CARDS ── */
+.pattern-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.pattern-card{background:var(--paper);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px;box-shadow:var(--shadow-sm)}
+.pattern-card.critical{border-left:3px solid var(--danger)}
+.pattern-card.high{border-left:3px solid var(--warning-border)}
+.pattern-card.medium{border-left:3px solid var(--sky)}
+.pattern-card.low{border-left:3px solid var(--border-strong)}
+.pattern-cat{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink4);margin-bottom:6px}
+.pattern-text{font-size:13px;font-weight:600;color:var(--ink1);margin-bottom:10px;line-height:1.4}
+.pattern-bar-wrap{display:flex;align-items:center;gap:8px}
+.pattern-bar{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.pattern-bar-fill{height:100%;border-radius:3px}
+.pattern-pct{font-size:11px;font-weight:700;color:var(--ink3);white-space:nowrap}
+
+/* ── TESTER CARDS ── */
+.tester-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.tester-card{background:var(--paper);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow-sm);overflow:hidden}
+.tester-card-head{padding:14px 18px}
+.tester-card-name{font-size:15px;font-weight:700;color:#fff}
+.tester-card-case{font-size:11px;color:rgba(255,255,255,.55);margin-top:2px}
+.tester-card-body{padding:16px 18px}
+.tester-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px}
+.tester-row:last-child{border-bottom:none}
+.t-label{color:var(--ink4)}
+.t-val{font-weight:600;color:var(--ink1)}
+.issues-list{margin-top:12px;border-top:1px solid var(--border);padding-top:12px;display:flex;flex-direction:column;gap:4px}
+.issue-item{font-size:11px;color:var(--danger);display:flex;align-items:flex-start;gap:5px;line-height:1.4}
+.issue-item::before{content:'—';flex-shrink:0;font-weight:700}
+.quote-box{background:var(--cream);border-left:2px solid var(--royal);padding:10px 12px;font-size:12px;color:var(--ink3);line-height:1.55;margin-top:10px;border-radius:0 var(--r) var(--r) 0;font-style:italic}
+.callback-box{background:var(--warning-bg);border:1px solid var(--warning-border);border-radius:var(--r);padding:10px 12px;font-size:11px;color:var(--warning);margin-top:8px;line-height:1.5}
+.callback-box strong{font-weight:700;display:block;margin-bottom:2px}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;padding:2px 10px;border-radius:var(--r-pill);font-size:10px;font-weight:700;letter-spacing:.03em;text-transform:uppercase}
+.badge-success{background:var(--success-bg);color:var(--success);border:1px solid var(--success-border)}
+.badge-danger{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger-border)}
+.badge-warning{background:var(--warning-bg);color:var(--warning);border:1px solid var(--warning-border)}
+.badge-info{background:var(--info-bg);color:var(--info);border:1px solid var(--info-border)}
+.badge-neutral{background:var(--cream);color:var(--ink3);border:1px solid var(--border)}
+.gravity-pill{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;font-size:10px;font-weight:800;flex-shrink:0}
+.g-l1{background:var(--success-bg);color:var(--success)}
+.g-l2{background:var(--info-bg);color:var(--info)}
+.g-l3{background:var(--warning-bg);color:var(--warning)}
+.g-l4{background:var(--danger-bg);color:var(--danger)}
+.rating-chip{display:inline-flex;align-items:center;background:var(--navy);color:#fff;font-weight:700;font-size:12px;padding:2px 10px;border-radius:var(--r-pill)}
+
+/* ── ACCURACY TABLE ── */
+.acc-table{width:100%;border-collapse:collapse;font-size:12px}
+.acc-table th{text-align:left;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink4);padding:8px 10px;border-bottom:2px solid var(--border);white-space:nowrap;background:var(--cream)}
+.acc-table td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+.acc-table tr:last-child td{border-bottom:none}
+.acc-table tr:hover td{background:#fafafa}
+.ok{color:var(--success);font-weight:700}
+.warn{color:var(--warning);font-weight:700}
+.fail{color:var(--danger);font-weight:700}
+.na{color:var(--ink4)}
+
+/* ── RECS TABLE ── */
+.rec-table{width:100%;border-collapse:collapse}
+.rec-table th{text-align:left;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink4);padding:8px 12px;border-bottom:2px solid var(--border);background:var(--cream)}
+.rec-table td{padding:12px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:top}
+.rec-table tr:last-child td{border-bottom:none}
+.rec-num{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--border-strong);width:32px}
+.rec-issue{font-weight:700;color:var(--ink1);margin-bottom:4px;font-size:13px}
+.rec-detail{font-size:12px;color:var(--ink3);line-height:1.5}
+.rec-affected{font-size:11px;font-weight:600;color:var(--ink4);margin-top:4px}
+
+/* ── FOOTER ── */
+.report-footer{border-top:1px solid var(--border);padding:24px 0;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--ink4)}
+
+@media(max-width:680px){
+  .chart-grid,.tester-grid{grid-template-columns:1fr}
+  .bar-name{width:60px;font-size:11px}
+  .cover-meta{gap:16px}
+}
+</style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">
+  <svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+  Print / Save PDF
+</button>
+
+<div id="app"><!-- Rendered by JS --></div>
+
+<script>
+// ── FETCH JSON AND RENDER ──────────────────────────────────────
+fetch('report.json')
+  .then(r => r.json())
+  .then(data => render(data))
+  .catch(() => {
+    // Fallback if fetching fails (e.g. opened directly as file)
+    document.getElementById('app').innerHTML = `
+      <div style="padding:48px;text-align:center;font-family:Inter,sans-serif;color:#4a5568">
+        <h2 style="margin-bottom:12px">Loading report data...</h2>
+        <p style="font-size:14px">Make sure <strong>report.json</strong> is in the same folder as this file.<br>
+        If opening locally, use a local server or upload both files to GitHub together.</p>
+      </div>`;
+  });
+
+function render(d) {
+  const m = d.meta;
+  const s = d.summary;
+
+  // ── helpers ──
+  const badge = (text, type) => `<span class="badge badge-${type}">${text}</span>`;
+  const gravBadge = (g) => {
+    const map = {L1:'g-l1',L2:'g-l2',L3:'g-l3',L4:'g-l4'};
+    return `<span class="gravity-pill ${map[g]||''}">${g}</span>`;
+  };
+  const priorityBadge = (p) => {
+    const map = {Critical:'danger',High:'warning',Medium:'info',Low:'neutral'};
+    return badge(p, map[p]||'neutral');
+  };
+  const pct = (count, total) => Math.round((count/total)*100);
+  const barColor = (n) => n >= 9 ? '#276749' : n >= 7 ? '#1a4fd6' : n >= 5 ? '#7b4f12' : '#9b2335';
+
+  // ── COVER ──
+  const cover = `
+  <div class="cover">
+    <div class="cover-top">
+      <div class="cover-wordmark">SNAP Insurance Service LLC</div>
+      <div class="cover-badge">${m.confidentiality}</div>
+    </div>
+    <div>
+      <div class="cover-eyebrow">${m.project}</div>
+      <div class="cover-title">${m.title}<br><strong>${m.round}</strong></div>
+      <div class="cover-sub">A controlled quality assurance evaluation of Inaza's afterhours FNOL voice agent across real claim scenarios — measuring data accuracy and user experience.</div>
+      <div class="cover-meta">
+        <div class="cover-meta-item"><strong>Prepared by</strong>${m.preparedBy}</div>
+        <div class="cover-meta-item"><strong>Prepared for</strong>${m.preparedFor}</div>
+        <div class="cover-meta-item"><strong>Date</strong>${m.date}</div>
+        <div class="cover-meta-item"><strong>Company</strong>${m.company}</div>
+      </div>
+    </div>
+  </div>`;
+
+  // ── EXECUTIVE SUMMARY ──
+  const statColors = {navy:'navy',success:'success',danger:'danger',royal:'royal'};
+  const statsHtml = s.stats.map(st => `
+    <div class="stat-card ${statColors[st.color]||''}">
+      <div class="stat-label">${st.label}</div>
+      <div class="stat-value">${st.value}</div>
+      <div class="stat-note">${st.note}</div>
+    </div>`).join('');
+
+  const execSummary = `
+  <div class="container">
+    <div class="section" style="margin-top:40px">
+      <div class="section-label">Executive Summary</div>
+      <div class="section-title">Overview</div>
+      <div class="summary-box"><p>${s.overview}</p></div>
+      <div class="stat-grid">${statsHtml}</div>
+    </div>`;
+
+  // ── CHARTS ──
+  const completedTesters = d.testers.filter(t => t.completed);
+  const claimsCreated = d.testers.filter(t => t.claimCreated).length;
+  const noData = d.testers.filter(t => !t.claimCreated).length;
+
+  const feltCounts = {};
+  d.testers.forEach(t => { feltCounts[t.felt] = (feltCounts[t.felt]||0)+1; });
+  const feltColors = {'Helped and informed':'#276749','Neutral':'#1a4fd6','Confused':'#7b4f12','Frustrated':'#9b2335'};
+
+  const easeAvg = (d.testers.reduce((a,t)=>a+t.easeRating,0)/d.testers.length).toFixed(1);
+  const botAvg = (d.testers.reduce((a,t)=>a+t.botRating,0)/d.testers.length).toFixed(1);
+
+  const easeBars = d.testers.map(t => `
+    <div class="bar-row">
+      <span class="bar-name">${t.name}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${t.easeRating*10}%;background:${barColor(t.easeRating)}">${t.easeRating}</div></div>
+      <span class="bar-val">${t.easeRating}/10</span>
+    </div>`).join('');
+
+  const botBars = d.testers.map(t => `
+    <div class="bar-row">
+      <span class="bar-name">${t.name}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${t.botRating*10}%;background:${barColor(t.botRating)}">${t.botRating}</div></div>
+      <span class="bar-val">${t.botRating}/10</span>
+    </div>`).join('');
+
+  // Donut SVG helpers
+  const donutSegments = (slices) => {
+    let offset = 25; // start at top
+    const r = 15.9, circ = 100;
+    return slices.map(sl => {
+      const dash = (sl.pct/100)*circ;
+      const seg = `<circle cx="21" cy="21" r="${r}" fill="none" stroke="${sl.color}" stroke-width="5"
+        stroke-dasharray="${dash} ${circ-dash}" stroke-dashoffset="${offset}" transform="rotate(-90 21 21)"/>`;
+      offset -= dash;
+      return seg;
+    }).join('');
+  };
+
+  const completionSlices = [
+    {pct:pct(claimsCreated,d.testers.length), color:'#276749'},
+    {pct:pct(noData,d.testers.length), color:'#9b2335'}
+  ];
+  const feltTotal = Object.values(feltCounts).reduce((a,b)=>a+b,0);
+  const feltSlices = Object.entries(feltCounts).map(([k,v]) => ({pct:pct(v,feltTotal), color:feltColors[k]||'#718096'}));
+
+  const charts = `
+    <div class="section">
+      <div class="section-label">Performance</div>
+      <div class="section-title">Call ratings</div>
+      <div class="section-sub">Ease of call and bot rating as reported by each tester</div>
+      <div class="chart-grid">
+        <div class="chart-wrap">
+          <div class="chart-title">Ease of call — per tester (avg ${easeAvg}/10)</div>
+          <div class="bar-chart">${easeBars}</div>
+        </div>
+        <div class="chart-wrap">
+          <div class="chart-title">Bot rating — per tester (avg ${botAvg}/10)</div>
+          <div class="bar-chart">${botBars}</div>
+        </div>
+      </div>
+      <div class="chart-grid">
+        <div class="chart-wrap">
+          <div class="chart-title">Claim creation outcome</div>
+          <div class="donut-row">
+            <svg width="110" height="110" viewBox="0 0 42 42">
+              <circle cx="21" cy="21" r="15.9" fill="none" stroke="#e2e8f0" stroke-width="5"/>
+              ${donutSegments(completionSlices)}
+              <text x="21" y="25" text-anchor="middle" font-size="7" font-weight="800" fill="#0f1c2e">${pct(claimsCreated,d.testers.length)}%</text>
+            </svg>
+            <div class="donut-legend">
+              <div class="legend-item"><div class="legend-dot" style="background:#276749"></div>Claim created (${claimsCreated})</div>
+              <div class="legend-item"><div class="legend-dot" style="background:#9b2335"></div>No data saved (${noData})</div>
+            </div>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <div class="chart-title">How testers felt after the call</div>
+          <div class="donut-row">
+            <svg width="110" height="110" viewBox="0 0 42 42">
+              <circle cx="21" cy="21" r="15.9" fill="none" stroke="#e2e8f0" stroke-width="5"/>
+              ${donutSegments(feltSlices)}
+            </svg>
+            <div class="donut-legend">
+              ${Object.entries(feltCounts).map(([k,v])=>`<div class="legend-item"><div class="legend-dot" style="background:${feltColors[k]||'#718096'}"></div>${k} (${v})</div>`).join('')}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+  // ── GRAVITY SUMMARY ──
+  const gravCounts = {L1:0,L2:0,L3:0,L4:0};
+  d.testers.forEach(t => { if(t.gravity) gravCounts[t.gravity]++; });
+  const gravDesc = {
+    L1:'Minor — callback fixable, customer does not need to re-explain',
+    L2:'Medium — callback required, customer must repeat core claim facts',
+    L3:'High — structural failure, claim cannot be worked as filed',
+    L4:'Critical — no claim created, total data loss'
+  };
+  const gravitySect = `
+    <div class="section">
+      <div class="section-label">Data Quality</div>
+      <div class="section-title">Failure gravity by tester</div>
+      <div class="section-sub">How much rework is required after each call</div>
+      <div class="card">
+        <div class="card-head"><h2>Gravity scale — ${d.testers.length} testers</h2></div>
+        <div class="card-body">
+          <table class="acc-table">
+            <thead><tr><th>Level</th><th>Definition</th><th>Count</th><th>Testers</th></tr></thead>
+            <tbody>
+              ${Object.entries(gravDesc).map(([g,desc])=>`
+              <tr>
+                <td>${gravBadge(g)}</td>
+                <td style="font-size:12px;color:var(--ink2)">${desc}</td>
+                <td><strong>${gravCounts[g]}</strong></td>
+                <td style="font-size:11px;color:var(--ink4)">${d.testers.filter(t=>t.gravity===g).map(t=>t.name).join(', ') || '—'}</td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+
+  // ── PATTERNS ──
+  const patternCards = d.patterns.map(p => {
+    const pctVal = pct(p.count, p.total);
+    const fillColors = {Critical:'#9b2335',High:'#f6ad55',Medium:'#6b9ef5',Low:'#cbd5e0'};
+    return `
+    <div class="pattern-card ${p.priority.toLowerCase()}">
+      <div class="pattern-cat">${p.category} · ${p.priority}</div>
+      <div class="pattern-text">${p.issue}</div>
+      <div class="pattern-bar-wrap">
+        <div class="pattern-bar"><div class="pattern-bar-fill" style="width:${pctVal}%;background:${fillColors[p.priority]||'#ccc'}"></div></div>
+        <span class="pattern-pct">${p.count}/${p.total} cases</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  const patternsSect = `
+    <div class="section page-break">
+      <div class="section-label">Recurring Issues</div>
+      <div class="section-title">Patterns confirmed across multiple testers</div>
+      <div class="section-sub">Issues appearing in 2 or more calls</div>
+      <div class="pattern-grid">${patternCards}</div>
+    </div>`;
+
+  // ── TESTER CARDS ──
+  const headColors = ['#0f1c2e','#1a3a6b','#1a4fd6','#276749','#7b4f12','#9b2335','#2d3748','#1a4fd6','#0f1c2e','#276749'];
+  const testerCards = d.testers.map((t, i) => {
+    const claimBadge = t.claimCreated ? badge('Created','success') : badge('None','danger');
+    const completedBadge = t.completed ? badge('Completed','success') : badge('Not completed','danger');
+    const gravB = gravBadge(t.gravity);
+    const issuesHtml = t.dataIssues.slice(0,5).map(issue => `<div class="issue-item">${issue}</div>`).join('');
+    const quoteText = t.bestPart || t.worstPart;
+    return `
+    <div class="tester-card">
+      <div class="tester-card-head" style="background:${headColors[i%headColors.length]}">
+        <div class="tester-card-name">${t.name}</div>
+        <div class="tester-card-case">${t.case} — ${t.scenario}</div>
+      </div>
+      <div class="tester-card-body">
+        <div class="tester-row"><span class="t-label">Outcome</span><span class="t-val">${completedBadge}</span></div>
+        <div class="tester-row"><span class="t-label">Claim</span><span class="t-val">${claimBadge}</span></div>
+        <div class="tester-row"><span class="t-label">Attempts</span><span class="t-val">${t.attempts}</span></div>
+        <div class="tester-row"><span class="t-label">Call length</span><span class="t-val">${t.callLength}</span></div>
+        <div class="tester-row"><span class="t-label">Ease / Bot</span><span class="t-val"><span class="rating-chip">${t.easeRating}/10</span> &nbsp; <span class="rating-chip">${t.botRating}/10</span></span></div>
+        <div class="tester-row"><span class="t-label">Felt</span><span class="t-val">${t.felt}</span></div>
+        <div class="tester-row"><span class="t-label">Gravity</span><span class="t-val">${gravB}</span></div>
+        <div class="issues-list">${issuesHtml}</div>
+        ${t.callbackGravity ? `<div class="callback-box"><strong>Callback impact:</strong>${t.callbackGravity}</div>` : ''}
+        ${quoteText ? `<div class="quote-box">"${quoteText}"</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  const testersSect = `
+    <div class="section page-break">
+      <div class="section-label">Tester Results</div>
+      <div class="section-title">Survey + data quality per tester</div>
+      <div class="section-sub">Each card shows survey ratings and key data issues found in Modotech</div>
+      <div class="tester-grid">${testerCards}</div>
+    </div>`;
+
+  // ── RECOMMENDATIONS ──
+  const recRows = d.recommendations.map(r => `
+    <tr>
+      <td class="rec-num">${r.rank}</td>
+      <td>${priorityBadge(r.priority)}</td>
+      <td>
+        <div class="rec-issue">${r.issue}</div>
+        <div class="rec-detail">${r.detail}</div>
+        <div class="rec-affected">Affected: ${r.affected}</div>
+      </td>
+    </tr>`).join('');
+
+  const recsSect = `
+    <div class="section page-break">
+      <div class="section-label">Recommendations</div>
+      <div class="section-title">Priority fixes for Inaza</div>
+      <div class="section-sub">Ranked by impact and frequency</div>
+      <div class="card">
+        <div class="card-head"><h2>Action items — ${d.recommendations.length} recommendations</h2></div>
+        <div class="card-body" style="padding:0;overflow-x:auto">
+          <table class="rec-table">
+            <thead><tr><th style="width:32px">#</th><th style="width:80px">Priority</th><th>Issue &amp; detail</th></tr></thead>
+            <tbody>${recRows}</tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+
+  // ── FIELD ACCURACY TABLE ──
+  const fields = [
+    'Claim created','Date of loss','Time of loss','Accident location',
+    'Incident description','IV make/model/year','IV color','IV VIN',
+    'IV driver name','IV driver phone/address','Owner vs driver distinction',
+    'CV year','CV make/model','CV driver name','CV driver phone',
+    'CV damage','CV insurance/policy','Police report','Address fields'
+  ];
+  const fieldData = {
+    'Edmar':      ['✓','✓','✓','✗','✓','✓','✓','✓','⚠','✗','✓','✗','✗','⚠','✓','✗','✓','✗','✗'],
+    'Mary Alejos':['✗','—','—','—','—','—','—','—','—','—','—','—','—','—','—','—','—','—','—'],
+    'JC':         ['✓','✓','✓','✓','✓','✓','✓','⚠','✓','✓','✓','✗','✓','⚠','✓','✗','✓','✗','✓'],
+    'Claudia':    ['✓','✓','✓','⚠','✓','✓','✓','✓','⚠','✓','✓','✗','✓','✓','✓','✗','✓','✓','⚠'],
+    'Mary Uribe': ['✓','✓','✗','✓','✗','✓','✓','✓','⚠','✓','✗','✗','✓','✓','✓','✗','✓','✗','✗'],
+    'Alex':       ['✓','✓','✓','✓','✓','✓','✓','✓','✓','⚠','✓','✗','✗','✗','✗','✗','✗','✓','✗'],
+    'Ron':        ['✓','✓','✓','⚠','✓','✓','✓','✓','✓','✓','⚠','✗','✓','⚠','✓','✗','✓','✓','✓'],
+    'Sarai':      ['✓','✓','✓','✓','✓','✓','⚠','✓','✓','✓','✓','✗','✗','⚠','✓','✗','✓','✓','✗'],
+    'JO':         ['✗','—','—','—','—','—','—','—','—','—','—','—','—','—','—','—','—','—','—'],
+    'Judy':       ['✓','✓','✓','✓','✓','✓','✓','✓','✓','✓','✓','✓','✓','✓','✓','✓','✓','✗','✓']
+  };
+  const names = Object.keys(fieldData);
+  const cellClass = v => v==='✓' ? 'ok' : v==='⚠' ? 'warn' : v==='✗' ? 'fail' : 'na';
+
+  const accTable = `
+    <div class="section page-break">
+      <div class="section-label">Appendix</div>
+      <div class="section-title">Field accuracy by tester</div>
+      <div class="section-sub">✓ Captured correctly &nbsp; ⚠ Partial or error &nbsp; ✗ Missing or wrong &nbsp; — No data (call failed)</div>
+      <div class="card">
+        <div class="card-body" style="padding:0;overflow-x:auto">
+          <table class="acc-table">
+            <thead>
+              <tr>
+                <th>Field</th>
+                ${names.map(n=>`<th>${n}</th>`).join('')}
+              </tr>
+            </thead>
+            <tbody>
+              ${fields.map((f,i)=>`
+              <tr>
+                <td style="font-weight:500;font-size:12px;color:var(--ink2);white-space:nowrap">${f}</td>
+                ${names.map(n=>`<td class="${cellClass(fieldData[n][i])}">${fieldData[n][i]}</td>`).join('')}
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+
+  // ── FOOTER ──
+  const footer = `
+    <div class="report-footer">
+      <span>${m.company} — ${m.project} · ${m.round}</span>
+      <span>${m.confidentiality} · ${m.date}</span>
+    </div>
+  </div>`;
+
+  document.getElementById('app').innerHTML =
+    cover + execSummary + charts + gravitySect + patternsSect + testersSect + recsSect + accTable + footer;
+}
+</script>
+</body>
+</html>
