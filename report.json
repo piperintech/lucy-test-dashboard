@@ -22,7 +22,7 @@
   },
   "testers": [
     {
-      "name": "Edmar",
+      "name": "Tester C",
       "case": "Case 6",
       "scenario": "Parking lot backup — Grand Prairie, TX",
       "role": "Insured / driver",
@@ -44,7 +44,7 @@
       "otherNotes": "During the call Lucy sounded professional but distant and sometimes rude. If I had to ask her to repeat, she sounded irritated.",
       "dataIssues": [
         "Accident location logged as Unknown",
-        "Insured name truncated to 'One Hernandez' — first name dropped",
+        "Insured name truncated to 'One Solano' — first name dropped",
         "No address fields collected for any party",
         "CV make, model, color not captured",
         "CV damage not captured",
@@ -54,7 +54,7 @@
       "callbackGravity": "Adjuster must re-ask accident location, full driver name, all address fields, and complete CV details — customer repeats themselves on core claim facts."
     },
     {
-      "name": "Mary Alejos",
+      "name": "Tester G",
       "case": "Case 8",
       "scenario": "Parking lot collision — Mission, TX",
       "role": "Insured / driver",
@@ -83,7 +83,7 @@
       "callbackGravity": "No claim exists. Customer must start completely from scratch. Total data loss on both attempts."
     },
     {
-      "name": "JC",
+      "name": "Tester D",
       "case": "Case 10",
       "scenario": "First accident ever — hit parked car without realizing, Ohio",
       "role": "Insured — first accident ever",
@@ -115,7 +115,7 @@
       "callbackGravity": "Adjuster must verify VIN, CV damage, injury status, and tow status. Role confusion caused a failed first attempt — customer had to call twice."
     },
     {
-      "name": "Claudia",
+      "name": "Nico",
       "case": "Case 13",
       "scenario": "Rear-ended a RAV4 on Texas highway — Dallas, TX",
       "role": "Insured — cooperative but in a hurry",
@@ -139,13 +139,13 @@
         "CV year logged as '0'",
         "CV damage shows 'no damage' despite rear bumper damage in scenario",
         "CV VIN not captured",
-        "Driver name misspelled: Parra → 'Para'",
+        "Driver name misspelled: Fuentes → 'Para'",
         "No closing summary — customer left with no confirmation, no next steps, no timeline"
       ],
       "callbackGravity": "Claim filed accurately on IV side. Customer left confused about whether claim was real. No confirmation communicated — trust gap despite perfect call ratings."
     },
     {
-      "name": "Mary Uribe",
+      "name": "Tester H",
       "case": "Case 3",
       "scenario": "Driving sister-in-law's car, rear-ended a Range Rover — McAllen, TX",
       "role": "Insured (not the policyholder)",
@@ -172,12 +172,12 @@
         "Time of loss not captured",
         "Police report not logged",
         "Tow information not captured",
-        "Driver name misspelled: Marycita → 'Maristita'"
+        "Driver name misspelled: Diego → 'Maristita'"
       ],
       "callbackGravity": "Adjuster must reconstruct the incident description entirely. Owner/driver relationship incorrectly established — may affect coverage determination."
     },
     {
-      "name": "Alex",
+      "name": "Tester A",
       "case": "Case 12",
       "scenario": "Rear-ended in stop-and-go traffic — Military Pkwy, Dallas TX",
       "role": "Claimant — strong character",
@@ -212,7 +212,7 @@
       "callbackGravity": "CV is entirely mirrored from IV data. Claimant — the person who called — has no record in the system. Adjuster must re-interview both parties. Claim cannot be properly worked as filed."
     },
     {
-      "name": "Ron",
+      "name": "Tester I",
       "case": "Case 5",
       "scenario": "Calling for wife — SNAP insured ran red light, Las Vegas NM",
       "role": "Other — husband of claimant",
@@ -235,8 +235,8 @@
       "dataIssues": [
         "CV year logged as '0'",
         "CV damage not captured",
-        "IV owner confused with driver — Tiffany logged as owner, policyholder is Anthony Mark Sanchez",
-        "Claimant name misspelled: Amirra → 'Amiri'",
+        "IV owner confused with driver — Mateo logged as owner, policyholder is Tomas Toledo Del Valle",
+        "Claimant name misspelled: Ines → 'Amiri'",
         "Witness not captured",
         "Lucy created claim on policy with active 'do not change' flag — existing open claim 2026-WINM03317",
         "Speech rate noted as too fast"
@@ -244,7 +244,7 @@
       "callbackGravity": "Duplicate claim created on flagged policy. Adjuster must reconcile with existing claim 2026-WINM03317 and verify CV damage and witness information."
     },
     {
-      "name": "Sarai",
+      "name": "Tester J",
       "case": "Case 11",
       "scenario": "Sideswiped merging on HWY 83 — McAllen, TX",
       "role": "Insured — ideal caller",
@@ -271,7 +271,7 @@
         "CV make/model not captured",
         "CV year not captured",
         "CV damage not captured",
-        "CV driver name misspelled: Sheila → 'Shayla'",
+        "CV driver name misspelled: Alma → 'Shayla'",
         "IV color misspelled: Grey → 'Grat'",
         "Lucy interrupts caller mid-sentence",
         "VIN read back too fast to verify"
@@ -279,7 +279,7 @@
       "callbackGravity": "Coverage gap not detected — claim filed on inactive policy. Wrong phone number in system unresolved. CV entirely missing. Adjuster must verify coverage validity before proceeding."
     },
     {
-      "name": "JO",
+      "name": "Tester E",
       "case": "Case 4",
       "scenario": "Policyholder not present — uncle driving, Mesquite TX",
       "role": "Policyholder (not the driver)",
@@ -309,7 +309,7 @@
       "callbackGravity": "Perfect call experience, zero system output. Customer left confident a claim was filed. No claim exists. Total data loss on the highest-rated call of the round."
     },
     {
-      "name": "Judy",
+      "name": "Tester F",
       "case": "Case 7",
       "scenario": "Hit fixed object — RV park gate, Harlingen TX",
       "role": "Third-party carrier adjuster",
@@ -364,7 +364,7 @@
     { "rank": 5, "priority": "High", "issue": "Lucy has no awareness of policy status — cancelled, flagged, or coverage gaps", "detail": "Lucy created claims on a cancelled policy, a flagged policy with an existing open claim, and a policy with no coverage on the date of loss. A policy status check must be integrated into the opening of every call.", "affected": "3/10 cases" },
     { "rank": 6, "priority": "High", "issue": "CV damage defaults to 'no damage' — Lucy not confirming claimant vehicle damage", "detail": "4 of 10 cases show CV damage as 'no damage' despite scenarios with clear damage. Lucy must explicitly ask for and confirm CV damage before closing.", "affected": "4/10 cases" },
     { "rank": 7, "priority": "High", "issue": "Speech rate too fast — testers consistently struggled", "detail": "4 of 10 testers independently noted Lucy speaks too fast. This is especially problematic during VIN readback and closing summary. A slower default rate is recommended, especially for confirmation sequences.", "affected": "4/10 testers" },
-    { "rank": 8, "priority": "High", "issue": "Phonetic transcription errors on names", "detail": "4 of 10 cases had driver names misspelled due to phonetic transcription (Marycita → Maristita, Amirra → Amiri, Sheila → Shayla, Parra → Para). A confirmation step for names is recommended.", "affected": "4/10 cases" },
+    { "rank": 8, "priority": "High", "issue": "Phonetic transcription errors on names", "detail": "4 of 10 cases had driver names misspelled due to phonetic transcription (Diego → Maristita, Ines → Amiri, Alma → Shayla, Fuentes → Para). A confirmation step for names is recommended.", "affected": "4/10 cases" },
     { "rank": 9, "priority": "Medium", "issue": "Tone on repetition — perceived as rude or irritated", "detail": "2 testers noted Lucy sounded rude or irritated when asked to repeat information. This is a tone calibration issue in the repetition response script.", "affected": "2/10 testers" },
     { "rank": 10, "priority": "Medium", "issue": "Deferred corrections not followed up — 'we'll come back to it' never happens", "detail": "When a caller provided a correction, Lucy deferred it and never returned. Any deferred item must be queued and confirmed before the call ends.", "affected": "1/10 cases" }
   ]
